@@ -26,7 +26,7 @@ vpcs = [
     public_subnets  = ["public_nube1", "public_nube2"]
     private_subnets = ["privated_nube1", "privated_nube2"]
     create_igw = false
-    create_nat = true
+    create_nat = false
   }
 ]
 
