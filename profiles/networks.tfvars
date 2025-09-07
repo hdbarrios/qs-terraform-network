@@ -25,8 +25,8 @@ vpcs = [
     }
     public_subnets  = ["public_nube1", "public_nube2"]
     private_subnets = ["privated_nube1", "privated_nube2"]
-    create_igw = false 
-    create_nat = false 
+    create_igw = false
+    create_nat = true
   }
 ]
 
@@ -37,7 +37,7 @@ security_groups = [
     description = "Grupo de seguridad para odoo"
     vpc   = "vpc-nube"
     rules = {
-      ssh = {
+      sh = {
         port        = [50022]
         protocol    = "tcp"
         cidr_blocks = ["0.0.0.0/0"]

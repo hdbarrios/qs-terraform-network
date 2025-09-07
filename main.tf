@@ -88,9 +88,9 @@ resource "aws_security_group_rule" "rules" {
 # Internet Gateway
 #################################################
 resource "aws_internet_gateway" "igw" {
-  for_each = { for k, v in aws_vpc.main : k => v if try(v.create_igw, false) }
+  for_each = { for v in var.vpcs : v.name => v if try(v.create_igw, false) }
 
-  vpc_id = each.value.id
+  vpc_id = aws_vpc.main[each.key].id  # <-- ahora sí usamos el ID del recurso creado
 
   tags = {
     Name = "${each.key}-igw"
@@ -101,7 +101,7 @@ resource "aws_internet_gateway" "igw" {
 # NAT Gateways y EIPs
 #################################################
 resource "aws_eip" "nat" {
-  for_each = { for k, v in aws_vpc.main : k => v if try(v.create_nat, false) }
+  for_each = { for v in var.vpcs : v.name => v if try(v.create_nat, false) }
 
   tags = {
     Name = "${each.key}-nat-eip"
@@ -109,7 +109,7 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  for_each = { for k, v in aws_vpc.main : k => v if try(v.create_nat, false) }
+  for_each = { for v in var.vpcs : v.name => v if try(v.create_nat, false) }
 
   allocation_id = aws_eip.nat[each.key].id
   subnet_id     = aws_subnet.subnets["${each.key}-public_nube1"].id
