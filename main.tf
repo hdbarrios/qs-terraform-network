@@ -5,6 +5,7 @@ resource "aws_vpc" "main" {
   for_each = { for v in var.vpcs : v.name => v }
 
   cidr_block           = each.value.cidr
+  region               = each.value.region
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -83,3 +84,96 @@ resource "aws_security_group_rule" "rules" {
   )
 }
 
+#################################################
+# Internet Gateway
+#################################################
+resource "aws_internet_gateway" "igw" {
+  for_each = aws_vpc.main
+
+  vpc_id = each.value.id
+
+  tags = {
+    Name = "${each.key}-igw"
+  }
+}
+
+#################################################
+# NAT Gateways
+#################################################
+resource "aws_eip" "nat" {
+  for_each = aws_vpc.main
+
+  #vpc = true
+
+  tags = {
+    Name = "${each.key}-nat-eip"
+  }
+}
+
+resource "aws_nat_gateway" "nat" {
+  for_each = aws_vpc.main
+
+  allocation_id = aws_eip.nat[each.key].id
+
+  # Tomamos la primera subnet pública disponible
+  subnet_id = aws_subnet.subnets["${each.key}-public_nube1"].id
+
+  tags = {
+    Name = "${each.key}-nat-gw"
+  }
+
+  depends_on = [aws_eip.nat]
+}
+
+#################################################
+# Route Tables
+#################################################
+resource "aws_route_table" "public" {
+  for_each = aws_vpc.main
+
+  vpc_id = each.value.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw[each.key].id
+  }
+
+  tags = {
+    Name = "${each.key}-public-rt"
+  }
+}
+
+resource "aws_route_table_association" "public_assoc" {
+  for_each = {
+    for k, s in aws_subnet.subnets :
+    k => s if can(regex("public", k))
+  }
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.public[join("-", slice(split("-", each.key), 0, 2))].id
+}
+
+resource "aws_route_table" "private" {
+  for_each = aws_vpc.main
+
+  vpc_id = each.value.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat[each.key].id
+  }
+
+  tags = {
+    Name = "${each.key}-private-rt"
+  }
+}
+
+resource "aws_route_table_association" "private_assoc" {
+  for_each = {
+    for k, s in aws_subnet.subnets :
+    k => s if can(regex("privated", k))
+  }
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.private[join("-", slice(split("-", each.key), 0, 2))].id
+}

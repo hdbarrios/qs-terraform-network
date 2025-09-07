@@ -41,6 +41,7 @@ variable "vpcs" {
   type = list(object({
     name   = string
     cidr   = string
+    region = string
     subnets = map(object({
       cidr              = string
       availability_zone = string
