@@ -63,9 +63,14 @@ Security Groups:
 - **Public Subnet**: Para NAT Gateway, ELB o cualquier recurso que necesite salida a Internet
 - **Security Groups**: Gestionan el acceso a las instancias, con reglas definidas por `.tfvars`
 
+## Escenarios para decidir entre InternetGateWay y NatGateway o 100% privada:
+
+Ver: 
+- [Escenarios](./docs/escenarios.md)
+
 ## Crear InternetGateWay y NatGateway:
 
-ver:
+Ver:
 - [InternetGateway](./docs/InternetGateway_true.md)
 - [NatGateway](./docs/NatGateway_true.md)
 
