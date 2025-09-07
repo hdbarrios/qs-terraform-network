@@ -1,0 +1,33 @@
+# Estado de Terraform
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.tfstate.backup
+
+# Archivos locales de override
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Archivos de lock
+.terraform.lock.hcl
+
+# Carpeta de plugins y providers descargados
+.terraform/
+
+# Variables sensibles
+#*.tfvars
+#*.tfvars.json
+
+# Logs y demás
+*.log
+
+# IDEs / editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Mac OS
+.DS_Store
