@@ -85,6 +85,6 @@ Por mes (30 días): ~$46.80
 
 ## Conclusión:
 
-Si tenés poco tráfico, este diseño es seguro y clásico (subnets privadas + NAT).
+Si se tiene poco tráfico, este diseño es seguro y clásico (subnets privadas + NAT).
 
-Si querés ahorrar, podrías eliminar el NAT Gateway y dar acceso a las instancias privadas solo con IGW + bastion host, pero perderías simplicidad y automatización.
+Si se quiere ahorrar, se podria eliminar el NAT Gateway y dar acceso a las instancias privadas solo con IGW + bastion host, pero se perderia simplicidad y automatización.

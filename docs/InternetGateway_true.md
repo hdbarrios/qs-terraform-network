@@ -54,8 +54,8 @@ Subnets públicas (por ahora sin mapeo de IP pública, map_public_ip = false):
 public_nube1: 10.11.30.0/24 en sa-east-1a
 public_nube2: 10.11.40.0/24 en sa-east-1b
 
-`Nota:` Aunque no habra salida “pública”, todavía no salida al mundo porque map_public_ip está en false.
-        Igual hay IGW, así que podrías activarlas más adelante si querés IP públicas.
+`Nota:` Aunque no habra salida “pública”, porque map_public_ip está en false.
+        Igual hay IGW, de esta forma se podria activar más adelante si se quiere IP públicas.
 
 ### Gateways y tablas de rutas
 
