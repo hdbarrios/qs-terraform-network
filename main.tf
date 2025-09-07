@@ -10,7 +10,8 @@ resource "aws_vpc" "main" {
 
   tags = merge(
     { Name = each.value.name },
-    try(each.value.tags, {})
+    try(each.value.tags, {}),
+    var.tags
   )
 }
 
@@ -33,7 +34,8 @@ resource "aws_subnet" "subnets" {
 
   tags = merge(
     { Name = "${each.value.vpc_name}-${each.value.sn_name}" },
-    try(each.value.tags, {})
+    try(each.value.tags, {}),
+    var.tags
   )
 }
 
@@ -49,7 +51,8 @@ resource "aws_security_group" "main" {
 
   tags = merge(
     { Name = each.value.name },
-    try(each.value.tags, {})
+    try(each.value.tags, {}),
+    var.tags
   )
 }
 
