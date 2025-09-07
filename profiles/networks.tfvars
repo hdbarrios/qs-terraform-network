@@ -20,11 +20,13 @@ vpcs = [
     subnets = {
       privated_nube1 = { cidr = "10.11.10.0/24", availability_zone = "sa-east-1a" }
       privated_nube2 = { cidr = "10.11.20.0/24", availability_zone = "sa-east-1b" }
-      public_nube1   = { cidr = "10.11.30.0/24", availability_zone = "sa-east-1a", map_public_ip = true}
-      public_nube2   = { cidr = "10.11.40.0/24", availability_zone = "sa-east-1b", map_public_ip = true }
+      public_nube1   = { cidr = "10.11.30.0/24", availability_zone = "sa-east-1a", map_public_ip = false }
+      public_nube2   = { cidr = "10.11.40.0/24", availability_zone = "sa-east-1b", map_public_ip = false }
     }
     public_subnets  = ["public_nube1", "public_nube2"]
     private_subnets = ["privated_nube1", "privated_nube2"]
+    create_igw = false 
+    create_nat = false 
   }
 ]
 

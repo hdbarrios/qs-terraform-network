@@ -42,6 +42,8 @@ variable "vpcs" {
     name   = string
     cidr   = string
     region = string
+    create_igw = bool
+    create_nat = bool
     subnets = map(object({
       cidr              = string
       availability_zone = string

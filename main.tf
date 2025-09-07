@@ -28,9 +28,9 @@ resource "aws_subnet" "subnets" {
     ]) : "${subnet.vpc_name}-${subnet.sn_name}" => subnet
   }
 
-  vpc_id            = aws_vpc.main[each.value.vpc_name].id
-  cidr_block        = each.value.cidr
-  availability_zone = each.value.availability_zone
+  vpc_id                  = aws_vpc.main[each.value.vpc_name].id
+  cidr_block              = each.value.cidr
+  availability_zone       = each.value.availability_zone
   map_public_ip_on_launch = try(each.value.map_public_ip, false)
 
   tags = merge(
@@ -88,7 +88,7 @@ resource "aws_security_group_rule" "rules" {
 # Internet Gateway
 #################################################
 resource "aws_internet_gateway" "igw" {
-  for_each = aws_vpc.main
+  for_each = { for k, v in aws_vpc.main : k => v if try(v.create_igw, false) }
 
   vpc_id = each.value.id
 
@@ -98,12 +98,10 @@ resource "aws_internet_gateway" "igw" {
 }
 
 #################################################
-# NAT Gateways
+# NAT Gateways y EIPs
 #################################################
 resource "aws_eip" "nat" {
-  for_each = aws_vpc.main
-
-  #vpc = true
+  for_each = { for k, v in aws_vpc.main : k => v if try(v.create_nat, false) }
 
   tags = {
     Name = "${each.key}-nat-eip"
@@ -111,12 +109,10 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  for_each = aws_vpc.main
+  for_each = { for k, v in aws_vpc.main : k => v if try(v.create_nat, false) }
 
   allocation_id = aws_eip.nat[each.key].id
-
-  # Tomamos la primera subnet pública disponible
-  subnet_id = aws_subnet.subnets["${each.key}-public_nube1"].id
+  subnet_id     = aws_subnet.subnets["${each.key}-public_nube1"].id
 
   tags = {
     Name = "${each.key}-nat-gw"
@@ -128,6 +124,7 @@ resource "aws_nat_gateway" "nat" {
 #################################################
 # Route Tables
 #################################################
+# Route Tables públicas
 resource "aws_route_table" "public" {
   for_each = aws_vpc.main
 
@@ -135,7 +132,7 @@ resource "aws_route_table" "public" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw[each.key].id
+    gateway_id = try(aws_internet_gateway.igw[each.key].id, null)
   }
 
   tags = {
@@ -153,6 +150,7 @@ resource "aws_route_table_association" "public_assoc" {
   route_table_id = aws_route_table.public[join("-", slice(split("-", each.key), 0, 2))].id
 }
 
+# Route Tables privadas
 resource "aws_route_table" "private" {
   for_each = aws_vpc.main
 
@@ -160,7 +158,7 @@ resource "aws_route_table" "private" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat[each.key].id
+    nat_gateway_id = try(aws_nat_gateway.nat[each.key].id, null)
   }
 
   tags = {
