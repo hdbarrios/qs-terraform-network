@@ -8,7 +8,12 @@ Este módulo de Terraform despliega una red completa en AWS con alta disponibili
 - Route tables separadas para tráfico público y privado.
 - Security Group de Odoo, con reglas de acceso parametrizables.
 
-## Esquema de Red (ASCII)
+Para activar debe tener en la definicion de cada vpc:
+
+`create_nat = true`
+
+
+## Esquema de Red
 ```bash
                       +--------------------+
                       |  Internet Gateway  |

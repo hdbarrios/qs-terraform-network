@@ -1,5 +1,11 @@
 # InternetGateway_true  
 
+Para crear, en cada definicion de VPC, debe tener:
+
+`create_igw = true`
+
+## Esquema de Red
+
 ```bash
                          +---------------------+
                          |   Internet Gateway  |

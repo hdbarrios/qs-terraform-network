@@ -8,7 +8,7 @@ Este repositorio contiene scripts de **Terraform** para desplegar infraestructur
 
 ---
 
-## Diagrama de la Infraestructura
+## Diagrama de la Infraestructura base
 
 ```bash
                           +--------------------+
@@ -59,10 +59,15 @@ Security Groups:
 
 ```
 
-
 - **Private Subnet**: Para instancias internas (ej. Odoo, DB)
 - **Public Subnet**: Para NAT Gateway, ELB o cualquier recurso que necesite salida a Internet
 - **Security Groups**: Gestionan el acceso a las instancias, con reglas definidas por `.tfvars`
+
+## Crear InternetGateWay y NatGateway:
+
+ver:
+- [InternetGateway](./docs/InternetGateway_true.md)
+- [NatGateway](./docs/NatGateway_true.md)
 
 ---
 
