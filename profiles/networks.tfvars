@@ -36,14 +36,8 @@ security_groups = [
     name  = "odoo_secgroup"
     description = "Grupo de seguridad para odoo"
     vpc   = "vpc-nube"
+    region = "sa-east-1"
     rules = {
-      sh = {
-        port        = [50022]
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-        description = "Puerto ssh"
-        ethertype   = "IPv4"
-      },
       sshvpn = {
         port        = [22]
         protocol    = "tcp"
@@ -80,14 +74,6 @@ security_groups = [
         description  = ""
         ethertype   = "IPv4"
       },
-      All_IPv6 = {
-        port        = [0]
-        protocol    = "all"
-        cidr_blocks = []
-        remote_group = "odoo_secgroup"
-        description  = ""
-        ethertype    = "IPv6"
-      }
     }
   }
 ]

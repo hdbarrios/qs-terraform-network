@@ -1,5 +1,5 @@
 provider "aws" {
-  region  = var.aws_region
+  region = "sa-east-1"
   profile = "qs-terraform"
   alias   = "nube-quilsoft"
 }

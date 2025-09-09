@@ -65,6 +65,7 @@ EOT
     name        = string
     description = string
     vpc         = string
+    region      = string
     rules = map(object({
       port         = list(number)
       protocol     = string
