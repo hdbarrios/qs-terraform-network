@@ -89,6 +89,7 @@ resource "aws_security_group_rule" "rules_cidr" {
   security_group_id = aws_security_group.main[each.value.sg_name].id
   description       = try(each.value.description, "Rule ${each.value.rk}")
   region            = each.value.sg_region
+
 }
 
 resource "aws_security_group_rule" "rules_sg" {
@@ -117,6 +118,21 @@ resource "aws_security_group_rule" "rules_sg" {
   security_group_id        = aws_security_group.main[each.value.sg_name].id
   description              = try(each.value.description, "Rule ${each.value.rk}")
   region                   = each.value.sg_region
+}
+
+# Reglas de salida (egress) para todos los Security Groups
+resource "aws_security_group_rule" "egress_all" {
+  for_each = { for sg in var.security_groups : sg.name => sg }
+
+  type              = "egress"
+  protocol          = "-1"  # 'all'
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = aws_security_group.main[each.value.name].id
+  description       = "Salida a internet"
+  region            = each.value.region
 }
 
 
